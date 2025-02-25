@@ -1,0 +1,102 @@
+package assignment5;
+import java.io.*;
+import java.util.*;
+
+public class assignment5matrixmultiply {
+    public static void main(String[] args) throws IOException {
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Enter two file names or an integer:");
+            if (scanner.hasNextInt()) {
+                int size = scanner.nextInt();
+                generateAndMultiply(size);
+            } else {
+                String file1 = scanner.next();
+                String file2 = scanner.next();
+                processMatrixFiles(file1, file2);
+            }
+        }
+    }
+
+    private static void processMatrixFiles(String file1, String file2) throws IOException {
+        int[][] matrix1 = readMatrixFromFile(file1);
+        int[][] matrix2 = readMatrixFromFile(file2);
+        
+        if (matrix1[0].length != matrix2.length) {
+            System.out.println("Error: Matrices cannot be multiplied due to incompatible dimensions.");
+            return;
+        }
+        
+        int[][] result = multiplyMatrices(matrix1, matrix2);
+        writeMatrixToFile(result, "matrix3.txt");
+        System.out.println("Matrix multiplication result saved to matrix3.txt");
+    }
+
+    private static void generateAndMultiply(int size) throws IOException {
+        int[][] matrix1 = generateRandomMatrix(size, size);
+        int[][] matrix2 = generateRandomMatrix(size, size);
+        
+        writeMatrixToFile(matrix1, "matrix1.txt");
+        writeMatrixToFile(matrix2, "matrix2.txt");
+        
+        int[][] result = multiplyMatrices(matrix1, matrix2);
+        writeMatrixToFile(result, "matrix3.txt");
+        System.out.println("Random matrices generated and saved to matrix1.txt, matrix2.txt");
+        System.out.println("Matrix multiplication result saved to matrix3.txt");
+    }
+
+    private static int[][] readMatrixFromFile(String filename) throws IOException {
+        List<int[]> matrixList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                int[] row = Arrays.stream(line.trim().split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+                matrixList.add(row);
+            }
+        }
+        return matrixList.toArray(int[][]::new);
+    }
+
+    private static void writeMatrixToFile(int[][] matrix, String filename) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+            for (int[] row : matrix) {
+                for (int num : row) {
+                    bw.write(num + " ");
+                }
+                bw.newLine();
+            }
+        }
+    }
+
+    private static int[][] generateRandomMatrix(int rows, int cols) {
+        Random rand = new Random();
+        int[][] matrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = rand.nextInt(10); // Random numbers between 0 and 9
+            }
+        }
+        return matrix;
+    }
+
+    private static int[][] multiplyMatrices(int[][] matrix1, int[][] matrix2) {
+        int rows = matrix1.length;
+        int cols = matrix2[0].length;
+        int commonDim = matrix1[0].length;
+        int[][] result = new int[rows][cols];
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < commonDim; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+            }
+        }
+    }
+}*/
